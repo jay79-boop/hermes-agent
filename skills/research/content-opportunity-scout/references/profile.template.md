@@ -49,3 +49,7 @@ newsjack-style content, `30d` for slower-moving evergreen niches.
   fewer, stronger ideas)
 - How many finalists per run (default 5)
 - Opportunities log path (e.g. `~/.hermes/content-scout/log.jsonl`)
+- Outcomes log path (e.g. `~/.hermes/content-scout/outcomes.jsonl`) — see
+  `references/outcomes-log-format.md`. Optional but this is what lets the
+  skill calibrate toward what's actually worked instead of starting from
+  scratch every run.

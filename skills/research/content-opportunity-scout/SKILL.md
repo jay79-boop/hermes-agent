@@ -8,6 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [Content-Strategy, Trend-Research, YouTube, Social-Media, Opportunity-Scouting, Creator]
+    related_skills: [content-repurposer]
     requires_toolsets: [web]
 ---
 
@@ -49,7 +50,12 @@ tools plus the helper script in `scripts/`.
    accepted ideas to so it never pitches you the same thing twice
    (e.g. `~/.hermes/content-scout/log.jsonl`). It's created automatically
    on first run if missing.
-3. On every run, read the profile file first. If the user has no profile
+3. Pick a path for the outcomes log (e.g.
+   `~/.hermes/content-scout/outcomes.jsonl`) — see **Getting better over
+   time** below. This is what lets the skill actually improve instead of
+   repeating the same scan forever; skip it and the skill still works,
+   it just never calibrates.
+4. On every run, read the profile file first. If the user has no profile
    yet, ask 4-5 quick questions (niches, audience, formats, competitors,
    topics to avoid) instead of guessing, then offer to save the answers
    into the template for next time.
@@ -61,6 +67,21 @@ tools plus the helper script in `scripts/`.
 Read the profile file and the tail of the opportunities log (last ~50
 entries is enough) so you know what's already been pitched and what's
 off-limits.
+
+### Phase 0.5 — Calibrate (skip on first run, no history yet)
+
+```bash
+python scripts/calibrate.py ~/.hermes/content-scout/outcomes.jsonl
+```
+
+If it returns real calibration notes (not "insufficient data"), state them
+up front and use them to lean Phase 1's scanning effort and Phase 3's
+scoring toward what has actually hit for this user — e.g. spend more scan
+budget on a source type with a proven hit rate. Never use it to skip a
+source type entirely or to override a rubric score; it's a lean, not a
+override. If the log doesn't exist yet or has no shipped entries, say so
+in one line and move on — that's expected before the first outcomes are
+logged.
 
 ### Phase 1 — Multi-source scan
 
@@ -124,16 +145,38 @@ Return a ranked markdown report (finalists first, then a one-line list of
 "scanned but didn't clear the bar" for transparency). Append every briefed
 finalist to the opportunities log so the next run doesn't repeat it.
 
+### Phase 6 — Record outcomes (whenever the user reports back)
+
+This is a separate, later conversation, not part of every run: whenever
+the user mentions how a previously briefed idea actually performed once
+shipped, append one line to the outcomes log per
+`references/outcomes-log-format.md`. This is what Phase 0.5 reads next
+time — the skill only gets better if outcomes actually get logged, so
+prompt for this ("how did the trading-bot video do?") when it's been a
+while since a finalist was briefed and hasn't been followed up on.
+
+## Getting better over time
+
+This skill does not retrain or fine-tune anything — it's a feedback log,
+not a model update. `references/outcomes-log-format.md` defines the
+schema and `scripts/calibrate.py` computes hit rates per source type (or
+any field) once at least 5 shipped outcomes exist for a group. Below that
+threshold it says so plainly instead of guessing. Every calibration note
+that changes behavior gets stated in the run's output — this should never
+be an invisible adjustment.
+
 ## Quick Reference
 
 | Phase | Tool | Output |
 |---|---|---|
 | 0. Load context | Read profile + log tail | Niche/audience constraints, seen-before list |
+| 0.5. Calibrate | `scripts/calibrate.py` | Disclosed lean toward what's historically worked (or "not enough data") |
 | 1. Scan | `web_search`, `web_extract` | 15-30 raw candidates w/ evidence |
 | 2. Filter | manual | Deduped, on-topic, fresh candidates |
 | 3. Score | `scripts/score_opportunities.py` | Composite score per candidate |
 | 4. Brief | manual, using `references/scoring-rubric.md` hook families | Full brief per finalist |
 | 5. Output | append to log | Ranked report + updated log |
+| 6. Record outcomes | append to outcomes log | Feeds next run's calibration |
 
 ## Pitfalls
 
