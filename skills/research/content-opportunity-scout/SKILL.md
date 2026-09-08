@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [Content-Strategy, Trend-Research, YouTube, Social-Media, Opportunity-Scouting, Creator]
-    related_skills: [content-repurposer]
+    related_skills: [content-repurposer, content-performance-tracker]
     requires_toolsets: [web]
 ---
 

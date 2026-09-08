@@ -43,6 +43,26 @@ whatever applies to this skill's part of the pipeline)
   `content-opportunity-scout`
 - `hook_family`/(a `platform` field, defined in `content-repurposer`'s
   copy of this doc): filled in when reporting on a repurposed post
+- `external_id`: the platform's own ID for the shipped item (a YouTube
+  video ID, an X post ID) — only present on entries written by
+  `content-performance-tracker`. Used to dedupe: that skill never fetches
+  or logs the same ID twice.
+- `performance` can also be JSON `null`, not just `hit`/`ok`/`flop` —
+  written by `content-performance-tracker` when there isn't yet enough
+  same-format history to classify a new number as relatively good or bad.
+  `calibrate.py`'s `hit_rate()` excludes null-performance entries from
+  both the numerator and denominator, so an unclassified entry never
+  quietly drags the rate down the way counting it as a non-hit would.
+
+## Auto-filling this log
+
+Typing outcomes in by hand works, but `content-performance-tracker` (a
+separate skill) can fill this log automatically: point it at your shipped
+YouTube videos and/or X posts and it pulls real view/engagement numbers
+and appends entries here itself, classified against a rolling per-format
+baseline instead of an invented absolute threshold. See that skill's
+`SKILL.md` if it's installed — this skill doesn't require it, manual entries
+work exactly the same.
 
 ## How calibration uses it
 

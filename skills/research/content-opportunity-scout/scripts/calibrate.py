@@ -36,8 +36,15 @@ def load_entries(path):
     return entries
 
 
+CLASSIFIED = {"hit", "ok", "flop"}
+
+
 def hit_rate(entries):
-    shipped = [e for e in entries if e.get("shipped")]
+    # performance == null means "not yet classifiable" (e.g. not enough
+    # same-format history for a self-relative baseline) — excluded from
+    # both the numerator and denominator so it can't silently deflate the
+    # rate the way counting it as shipped-but-not-hit would.
+    shipped = [e for e in entries if e.get("shipped") and e.get("performance") in CLASSIFIED]
     if not shipped:
         return None, 0
     hits = sum(1 for e in shipped if e.get("performance") == "hit")

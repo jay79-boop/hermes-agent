@@ -8,7 +8,7 @@ platforms: [linux, macos, windows]
 metadata:
   hermes:
     tags: [Content-Strategy, Repurposing, Cross-Platform, YouTube, X, LinkedIn, Instagram, Shorts]
-    related_skills: [youtube-content, content-opportunity-scout]
+    related_skills: [youtube-content, content-opportunity-scout, content-performance-tracker]
     requires_toolsets: [web]
 ---
 

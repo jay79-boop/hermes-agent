@@ -35,8 +35,25 @@ Default path suggestion: `~/.hermes/content-scout/outcomes.jsonl`.
   `linkedin`, `instagram`, `shorts`, `newsletter`, `youtube`)
 - `hook_family`: which hook pattern that platform's draft used
 - `performance`: `hit` / `ok` / `flop` — the user's own call, trust it
-  over any metric if they disagree
+  over any metric if they disagree. Can also be JSON `null` — see below.
 - `metric_type`/`metric_value`: optional, whatever the user tracks
+- `external_id`: the platform's own ID for the post (a YouTube video ID, an
+  X post ID) — only present on entries `content-performance-tracker` wrote
+  automatically. Used to dedupe: that skill never re-fetches or re-logs the
+  same ID.
+- `performance: null` — written by `content-performance-tracker` when a new
+  post doesn't yet have enough same-format history to rank against. This is
+  NOT the same as a flop: `calibrate.py`'s `hit_rate()` excludes null
+  entries from both the numerator and denominator so an unclassified entry
+  never quietly deflates the rate.
+
+## Auto-filling this log
+
+`content-performance-tracker` (a separate skill) can fill this log
+automatically instead of typing outcomes in by hand: point it at shipped
+YouTube videos and/or X posts and it pulls real numbers, classifies them
+against a rolling per-format baseline, and appends entries here. This skill
+doesn't require it — manual entries work exactly the same.
 
 ## How calibration uses it
 
